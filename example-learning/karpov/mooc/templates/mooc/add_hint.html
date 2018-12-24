@@ -1,0 +1,21 @@
+Submit new hint for the following selected question:
+<br>
+<h3> {{ question.title }} </h3>
+{{ question.content | safe}}
+
+<br>
+<hr color="black">
+<br>
+Provide the new hint below:
+
+  <br>
+
+  {{ hint.content | safe }}
+  <br>
+  <br>
+<form name="add_hint" action="{% url 'add_hint' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="question_id" value="{{ question.id }}">
+    <textarea rows="10" cols="50" name="hint"></textarea>
+    <input name="submit" type="submit" value="submit">
+</form>

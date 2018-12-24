@@ -1,0 +1,34 @@
+{% load static %}
+
+<link rel="stlesheet" type="text/css" href="{% static 'mooc/style.css' %}">
+
+<h2> {{ question.title }} </h2>
+{{ question.content | safe}}
+
+<br>
+<hr color="black">
+
+When you were done thinking, please click the button to view the solution/hint.
+
+<button type="button" onclick="if(document.getElementById('spoiler') .style.display=='none') {document.getElementById('spoiler') .style.display=''}else{document.getElementById('spoiler') .style.display='none'}"> Show hint </button>
+      <br>
+
+<div id="spoiler" style="display:none">
+      <br>
+
+
+      {{ hint.content | safe }}
+
+      <br>
+      <br>
+    <hr color="black">
+    <form action="{% url 'vote' question.id hint.id %}" method="post">
+        {% csrf_token %}
+        Do you think this is a helpful hint for learners to understand the solution
+        to this problem?
+        <input name="yes" type="submit" value="yes">
+        <input name="no" type="submit" value="no">
+    </form>
+
+</div>
+
