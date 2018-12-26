@@ -26,6 +26,10 @@ class QuestionSelector():
         self.hint_model = hint_model
 
     def select_question(self, num_samples):
+        for q in self.qs:
+            if q.hint_set.count() == 0:
+                return q
+
         all_votes_count = self.hint_model.objects.aggregate(
                 Sum('yes_votes'), Sum('no_votes')
                 )
@@ -35,10 +39,6 @@ class QuestionSelector():
         
         samples_of_expeected_hint = np.random.beta(all_yes_votes + 1,
                 all_no_votes + 1, size=(num_samples, 1))
-
-        for q in self.qs:
-            if q.hint_set.count() == 0:
-                return q
 
         chosen_question = None
         times_won = 0
