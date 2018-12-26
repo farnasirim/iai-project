@@ -29,8 +29,8 @@ class QuestionSelector():
         all_votes_count = self.hint_model.objects.aggregate(
                 Sum('yes_votes'), Sum('no_votes')
                 )
-        all_yes_votes = all_votes_count['yes_votes__sum']
-        all_no_votes = all_votes_count['no_votes__sum']
+        all_yes_votes = all_votes_count['yes_votes__sum'] or 0
+        all_no_votes = all_votes_count['no_votes__sum'] or 0
 
         
         samples_of_expeected_hint = np.random.beta(all_yes_votes + 1,
