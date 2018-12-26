@@ -53,6 +53,7 @@
 
 \documentclass[conference]{IEEEtran}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 % limits underneath
 \DeclareMathOperator*{\argmaxA}{arg\,max} % Jan Hlavacek
@@ -78,6 +79,14 @@
 % manually specify the path to it like:
 % \documentclass[conference]{../sty/IEEEtran}
 
+ 
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=blue,
+}
 
 
 
@@ -611,6 +620,20 @@
 	a hint. The hint will be selected using Thompson sampling from the current hints in the system. After that they provide a boolean
 	feedback to signify whether or not they think the hint has been useful. The expert can query the system to ask which problem would
 	make the most impactful choice if she were to generate a hint, and after the response, the expert can add the new hint to the problem.
+	
+	
+	\section{Empirical Results}
+	I implemented a simplified version of the algorithm, added 3 computer science questions to the platform, and asked 7 computer science student to follow through with the flow of the software. The code is at \href{https://github.com/farnasirim/iai-project}{github.com/farnasirim/iai-project} and a online hosted version can be visited at \href{http://learn.farnasirim.ir}{http://learn.farnasirim.ir}. At the very beginning, after entering the problems, when one queries the system at \href{http://learn.farnasirim.ir/questions/add_hint/}{http://learn.farnasirim.ir/questions/add\_hint/} to find out where it would be better to add hints, if there exists a question without a hint, the system will ask for a hint for that problem.\\
+	If all of the questions already have a hint, the method that I introduced above is used to choose a question: find where the hint would
+	be most impactful. In this case, the hint to the first question is actually wrong and most of the people noticed that. That has resulted
+	in a number of downvotes for the first one. The second problem is fairly easy and the solution is correct and verbose. Most of the people found that useful. The third problem is a bit complex and people with lack of certain backgrounds may not understand it very easily. There was a mix of positive and negative feedbacks for that one.\\
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=0.35\textheight,keepaspectratio]{poisonous}
+	\end{figure}
+	
+	
+	This results in the system to ask for a hint for the first problem (Poisonous Chocolate) almost always at the current state. This will notify the instructor that there is room for improvement in the hint(s) to the first problem, and when she provides a better one, it will receive more positive feedback, which would shift the ``most impactful'' problem for a hint at the given time to another problem.
 	
 	
 	\section{Shortcomings and Future Work}
