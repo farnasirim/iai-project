@@ -7,6 +7,9 @@ verify_ssl = true
 
 [packages]
 django = "*"
+ipython = "*"
+autopep8 = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"

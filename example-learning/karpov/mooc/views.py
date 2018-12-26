@@ -3,10 +3,15 @@ from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.http import require_http_methods
 from django.template import loader
+from django.db.models import F
 
-from .models import Question
+
+from . import stat_models
+
+from .models import Question, Hint
 
 # Create your views here.
+
 
 def index(request):
     questions_list = Question.objects.all()
@@ -21,7 +26,8 @@ def index(request):
 
 def question(request, question_id):
     question = Question.objects.get(pk=question_id)
-    selected_hint = question.hint_set.first()  # TODO: fix selection
+    hint_selector = stat_models.HintSelector(question)
+    selected_hint = hint_selector.thompson_sampling_strategy()
     context = {
         'question': question,
         'hint': selected_hint,
@@ -33,7 +39,12 @@ def question(request, question_id):
 @require_http_methods(["POST"])
 def vote(request, question_id, hint_id):
     vote = 'yes' in request.POST
-    print(vote)
+    h = Hint.objects.get(id=hint_id)
+    if vote:
+        h.yes_votes = F('yes_votes') + 1
+    else:
+        h.no_votes = F('no_votes') + 1
+    h.save()
     return render(request, 'mooc/thanks.html', {})
 
 
@@ -51,8 +62,9 @@ def add_hint(request):
                 }
         return render(request, 'mooc/hint_added.html', context)
     elif request.method == "GET":
-        # TODO: select question
-        question = Question.objects.first()
+        to_select_from = Question.objects.all()
+        question_selector = stat_models.QuestionSelector(to_select_from, Hint)
+        question = question_selector.select_question(50)
         return render(request, 'mooc/add_hint.html', {'question': question})
     else:
         raise PermissionDenied
